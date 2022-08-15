@@ -36,10 +36,11 @@ class NoteControllerTest {
                 .alwaysDo(print()) // 결과 찍어주기
                 .build();
         userRepository.save(new User("user123","user123","ROLE_USER")); // TEST로 USER를 만듦.
+        userRepository.save(new User("admin","admin","ROLE_ADMIN")); // TEST로 USER를 만듦.
     }
     @Test
     void getNote_인증없음() throws Exception {
-        mockMvc.perform(get("/notice")) // notice URL를 get으로 요청
+        mockMvc.perform(get("/note")) // notice URL를 get으로 요청
                 .andExpect(redirectedUrlPattern("**/login")) // login을 하지 않았기 때문에 login 창으로 redirect가 된다.
                 .andExpect(status().is3xxRedirection()); // 이것은 redirection을 했다는 뜻이다.
     }
@@ -49,11 +50,23 @@ class NoteControllerTest {
     @WithUserDetails(
             value = "user123", // 가져올 username
             userDetailsServiceBeanName = "userDetailsService", // userDetailsService 를 Bean으로 가져오겠다. ( 즉 이 메서드로 찾아 오겠다. )
-            setupBefore = TestExecutionEvent.TEST_EXECUTION // Test 실행 직전에 MockUser를 만들겠다는 뜻 ( BeforeEach에서 test 유저 만든 것을 실행 직전에 만듦 )
+            setupBefore = TestExecutionEvent.TEST_EXECUTION // Test 실행 직전에 MockUser를 만들겠다는 뜻 ( BeforeEach에서 test 유저 만든 것을 실행 직전에 만들어 권한을 줌 )
     )
     void getNote_유저권한있음() throws Exception {
-        mockMvc.perform(get("/notice")) // notice URL를 get으로 요청
-                .andExpect(status().isOk()); // 이것은 redirection을 했다는 뜻이다.
+        mockMvc.perform(get("/note")) // notice URL를 get으로 요청
+                .andExpect(status().isOk()); // 이것은 제대로 접속 되었다는 것이다.
+    }
+
+    @Test
+    // @WithMockUser와 다르게 가짜 유저를 가져올 때 UserDetails를 통해 가져오게 된다.
+    @WithUserDetails(
+            value = "admin", // 가져올 username
+            userDetailsServiceBeanName = "userDetailsService", // userDetailsService 를 Bean으로 가져오겠다. ( 즉 이 메서드로 찾아 오겠다. )
+            setupBefore = TestExecutionEvent.TEST_EXECUTION // Test 실행 직전에 MockUser를 만들겠다는 뜻 ( BeforeEach에서 test 유저 만든 것을 실행 직전에 만들어 권한을 줌 )
+    )
+    void getNote_어드민권한있음() throws Exception {
+        mockMvc.perform(get("/note")) // notice URL를 get으로 요청
+                .andExpect(status().isForbidden()); // 접근 제어 ( 403 에러 )
     }
 
     @Test
