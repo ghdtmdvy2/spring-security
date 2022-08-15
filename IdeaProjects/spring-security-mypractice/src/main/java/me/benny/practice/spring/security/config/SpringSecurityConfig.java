@@ -25,6 +25,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+
         // authorization
         http.authorizeRequests()
                 // /와 /home와 /signup 는 접근 권한 없이 모두 허용
@@ -55,6 +57,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 // logout 성공 시 루트 페이지로 이동
                 .logoutSuccessUrl("/");
+    }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // web.ignoring().antMatchers("/images/**", "/css/**"); // 아래 코드와 같은 코드입니다.
+        // 정적 리소스 spring security 대상에서 제외
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+
+        // 위의 코드와 똑같이 작동은 하지만 밑에 코드는 필터를 거치나 허가를 해주는 것이고, 위에 코드는 필터를 거치지 않기 때문에
+        // 위에 코드가 더 성능적으로 우수하다.
+        // http.authorizeRequests()
+        //     .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+        //     .permitAll();
     }
 }
