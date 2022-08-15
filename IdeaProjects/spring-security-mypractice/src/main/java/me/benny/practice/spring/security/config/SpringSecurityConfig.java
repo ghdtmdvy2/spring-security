@@ -25,7 +25,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+        // basic authentication filter
+        http.httpBasic().disable(); // basic filter 비 활성화
+        // csrf 사용
+        http.csrf();
+        // rememberMe(로그인 유지) 사용
+        http.rememberMe();
 
         // authorization
         http.authorizeRequests()
