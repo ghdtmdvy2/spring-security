@@ -2,7 +2,7 @@ package me.benny.practice.spring.security.config;
 
 import lombok.RequiredArgsConstructor;
 import me.benny.practice.spring.security.note.NoteService;
-import me.benny.practice.spring.security.notice.NoticeService;
+import me.benny.practice.spring.security.NoticeService;
 import me.benny.practice.spring.security.user.User;
 import me.benny.practice.spring.security.user.UserService;
 import org.springframework.context.annotation.Bean;

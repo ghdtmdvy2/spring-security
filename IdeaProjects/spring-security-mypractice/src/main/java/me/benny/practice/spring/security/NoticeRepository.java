@@ -1,4 +1,4 @@
-package me.benny.practice.spring.security.notice;
+package me.benny.practice.spring.security;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

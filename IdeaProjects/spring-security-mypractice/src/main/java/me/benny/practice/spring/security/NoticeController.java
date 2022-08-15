@@ -1,4 +1,4 @@
-package me.benny.practice.spring.security.notice;
+package me.benny.practice.spring.security;
 
 import lombok.RequiredArgsConstructor;
 import me.benny.practice.spring.security.note.NoteRegisterDto;
