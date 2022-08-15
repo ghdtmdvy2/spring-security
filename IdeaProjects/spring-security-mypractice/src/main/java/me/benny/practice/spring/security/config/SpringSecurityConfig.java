@@ -49,6 +49,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/",false)
                 // login은 모두 접근 가능
                 .permitAll();
+        // logout
+        http.logout()
+                // logout 요청 경로
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                // logout 성공 시 루트 페이지로 이동
+                .logoutSuccessUrl("/");
 
     }
 }
