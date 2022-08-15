@@ -21,7 +21,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration //
 @EnableWebSecurity // WebSecurityConfigurerAdapter를 상속을 할 경우 달아줘야한다.
 // WebSecurityConfigurerAdapter : 개발자가 Spring Security를 설정을 쉽게 할 수 있도록 구현 되어 있다.
+@RequiredArgsConstructor // final 붙여 있는 것을 생성자 주입.
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -75,5 +77,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         // http.authorizeRequests()
         //     .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
         //     .permitAll();
+    }
+
+    // spring Security 에서 User를 찾을 때 사용
+    @Bean
+    @Override
+    protected UserDetailsService userDetailsService() {
+        // UserDetailsService 안에 loadUserByUsername 메서드가 하나 이기 때문에 람다 표현식으로 간단하게 구현 할 수 있다.
+        return username -> {
+            User user = userService.findByUsername(username); // username으로 User를 찾아옴.
+            if (user == null){ // 유저가 찾아봤는데 없다면
+                throw new UsernameNotFoundException(username); // UsernameNotFoundException 에러 처리
+            }
+            return user; // 찾는 유저가 있다면 user를 넘겨줌.
+        };
     }
 }
