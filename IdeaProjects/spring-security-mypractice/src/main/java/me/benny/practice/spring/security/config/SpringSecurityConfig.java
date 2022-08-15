@@ -41,6 +41,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE,"/notice").hasRole("ADMIN")
                 // 그 외 요청은 인증 받은 사람만 가능하게 만듦. ( 그러므로 antMatchers(HttpMethod.GET,"/notice").authenticated() 코드는 없어도 된다. )
                 .anyRequest().authenticated();
+        // login
+        http.formLogin()
+                // login 페이지가 어떤 것인지 설정.
+                .loginPage("/login")
+                // login 성공시 루트 페이지로 이동 ( alwayUse를 false로 입력 시 접속 하려던 URL로 바로 이동 )
+                .defaultSuccessUrl("/",false)
+                // login은 모두 접근 가능
+                .permitAll();
 
     }
 }
